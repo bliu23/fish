@@ -1,0 +1,5 @@
+lib
+src/generated
+.nyc_output
+coverage
+build

@@ -1,0 +1,33 @@
+{
+  "name": "fish",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bliu23/fish.git"
+  },
+  "author": "Brandon Liu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bliu23/fish/issues"
+  },
+  "homepage": "https://github.com/bliu23/fish#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chalk": "^4.1.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "nodemon": "^2.0.4",
+    "nyc": "^15.1.0",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.0.2",
+    "typescript": "^3.9.7"
+  }
+}
