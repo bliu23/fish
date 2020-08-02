@@ -14,6 +14,7 @@ const roomManager = new RoomManager();
 
 app.get('/', (req, res) => {
   res.send('Test');
+  console.log('fooooo');
 });
 
 server.listen(PORT, () => {
