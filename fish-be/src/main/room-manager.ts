@@ -1,20 +1,20 @@
-import { Game } from './game';
-import { Player } from './types/player';
-import { RoomId } from './types/room-id';
 import Constants from './constants';
+import { Game } from './game/game';
+import { PlayerName } from './types/player-name';
+import { RoomId } from './types/room-id';
 
 export class RoomManager {
-  private _rooms: Map<RoomId, Player[]>;
+  private _rooms: Map<RoomId, PlayerName[]>;
   constructor() {
     this._rooms = new Map();
   }
 
-  get rooms(): Map<RoomId, Player[]> {
+  get rooms(): Map<RoomId, PlayerName[]> {
     return this._rooms;
   }
 
-  addPlayer(roomId: RoomId, player: Player): boolean {
-    const playersForRoom: Player[] = this.getPlayers(roomId);
+  addPlayer(roomId: RoomId, player: PlayerName): boolean {
+    const playersForRoom: PlayerName[] = this.getPlayers(roomId);
 
     if (this.isFull(roomId)) {
       return false;
@@ -24,8 +24,8 @@ export class RoomManager {
     return true;
   }
 
-  getPlayers(roomId: RoomId): Player[] {
-    const playersForRoom: Player[] | undefined = this.rooms.get(roomId);
+  getPlayers(roomId: RoomId): PlayerName[] {
+    const playersForRoom: PlayerName[] | undefined = this.rooms.get(roomId);
 
     if (playersForRoom) {
       return playersForRoom;

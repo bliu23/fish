@@ -20,6 +20,7 @@ server.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
 
+// Socket manager
 sio.on('connection', (socket: io.Socket) => {
   // Sample breaking down by room, probably player as well?
   socket.on('joinRoom', (roomId: RoomId) => {
