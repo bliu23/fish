@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { socket } from "./socket";
+import "./App.css";
 
 function App() {
+  const [numPlayers, setNumPlayers] = useState(1);
+  const [connected, setConnected] = useState(false);
+  const [roomId, setRoomId] = useState("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    if (!connected) {
+      // Sample emit to server (or other sockets) based on event
+      socket.emit("room", roomId);
+      setConnected(true);
+    }
+  };
+
+  // Handle event emit event from server (or other sockets)
+  socket.on("connectToRoom", (data) => setNumPlayers(data));
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleSubmit}>
+        <label>RoomId: </label>
+        <input
+          type="text"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
+        ></input>
+      </form>
+      <p>Room Id: {roomId}</p>
+      <p>numPlayers: {numPlayers}</p>
     </div>
   );
 }

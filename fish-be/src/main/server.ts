@@ -16,8 +16,18 @@ server.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
 
+const rooms: number[] = [];
+
 sio.on('connection', (socket: io.Socket) => {
-  console.log('Connection established');
+  // Sample breaking down by room
+  socket.on('room', (roomNumber) => {
+    rooms[roomNumber] ? rooms[roomNumber]++ : (rooms[roomNumber] = 1);
+    socket.join(`${roomNumber}`);
+
+    console.log(`${rooms[roomNumber]} players in `);
+
+    sio.sockets.in(`${roomNumber}`).emit('connectToRoom', rooms[roomNumber]);
+  });
 
   socket.on('disconnect', () => {
     console.log('client disconnected');
