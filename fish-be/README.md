@@ -1,4 +1,4 @@
-# fish
+# Fish
 
 ## Contributing
 
@@ -32,7 +32,7 @@ npm install
 npm run dev
 ```
 
-This script will compile and run the project, and listen for any new changes.
+This script will compile and run the project on port 3001, and listen for any new changes.
 
 ### Simple build for production
 
