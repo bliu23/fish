@@ -34,6 +34,12 @@ npm run dev
 
 This script will compile and run the project on port 3001, and listen for any new changes.
 
+To run tests, simply run:
+
+```
+npm test
+```
+
 ### Simple build for production
 
 ```

@@ -1,8 +1,7 @@
-import { RoomManager } from '../main/room-manager';
-
 import * as chai from 'chai';
 import Constants from '../main/constants';
-import { Game } from '../main/game';
+import { Game } from '../main/game/game';
+import { RoomManager } from '../main/room-manager';
 
 const expect = chai.expect;
 
@@ -20,6 +19,7 @@ describe('RoomManager', () => {
       expect(map.get(roomId)?.length).to.equal(1);
       expect(map.get(roomId)).to.deep.equal([player]);
     });
+
     it('should not add a player past the max size', () => {
       const roomManager = new RoomManager();
       const roomId = 'roomId';
