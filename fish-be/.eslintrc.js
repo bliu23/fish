@@ -13,7 +13,8 @@ module.exports = {
     '@typescript-eslint/explicit-member-accessibility': 0,
     '@typescript-eslint/explicit-function-return-type': 1,
     '@typescript-eslint/no-explicit-any': 1,
-    '@typescript-esline/no-inferrable-types': 0,
+    '@typescript-eslint/no-inferrable-types': 0,
+    '@typescript-eslint/no-unused-vars': 1,
     'no-console': 1,
     'padding-line-between-statements': [
       'error',
