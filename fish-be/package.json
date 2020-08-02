@@ -9,8 +9,9 @@
     "lint": "eslint --fix './src/**/*.ts'",
     "start": "npm run build && npm run start:only",
     "start:only": "node lib/main/server.js",
-    "start:watch": "nodemon -e ts --exec \"npm run build && node lib/main/server.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:watch": "nodemon -e ts --exec \"npm run build && node lib/main/server.js || exit 1\"",
+    "test": "npm run build && nyc npm run test:only --",
+    "test:only": "mocha './lib/tests'"
   },
   "repository": {
     "type": "git",
@@ -33,12 +34,22 @@
     "eslint-plugin-react": "^7.20.5",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
+    "mocha": "^8.1.0",
     "nodemon": "^2.0.4",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "sinon": "^9.0.2",
     "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/express": "^4.17.7",
+    "@types/mocha": "^8.0.1",
+    "@types/sinon": "^9.0.4",
+    "@types/socket.io": "^2.1.10",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
   },
   "nodemonConfigs": {
     "ext": "ts",
@@ -49,10 +60,18 @@
       "src"
     ]
   },
-  "dependencies": {
-    "@types/express": "^4.17.7",
-    "@types/socket.io": "^2.1.10",
-    "express": "^4.17.1",
-    "socket.io": "^2.3.0"
+  "nyc": {
+    "check-coverage": true,
+    "exclude": [
+      "**/*.d.ts",
+      "**/*.test.ts"
+    ],
+    "extensions": [
+      ".ts"
+    ],
+    "branches": 70,
+    "lines": 70,
+    "functions": 70,
+    "statements": 70
   }
 }
