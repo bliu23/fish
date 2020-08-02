@@ -11,7 +11,7 @@ function App() {
     evt.preventDefault();
     if (!connected) {
       // Sample emit to server (or other sockets) based on event
-      socket.emit("room", roomId);
+      socket.emit("joinRoom", roomId);
       setConnected(true);
     }
   };
