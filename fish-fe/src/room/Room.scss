@@ -1,3 +1,52 @@
 .Room {
   text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .top-bottom-row {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    justify-content: space-evenly;
+
+    .players {
+      margin-top: 10px;
+    }
+  }
+
+  .middle-row {
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+    background-color: pink;
+    justify-content: center;
+
+    .players {
+      margin-bottom: 10px;
+    }
+  }
+
+  .played-card {
+    width: 75px;
+    height: 100px;
+    background-color: white;
+    align-self: center;
+  }
+
+  .middle-row-left,
+  .middle-row-right {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .middle-row-center {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
 }

@@ -4,20 +4,7 @@ import './Hand.scss';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Card from '@heruka_urgyen/react-playing-cards/lib/TcB';
 
-function Hand() {
-  const [cards, setCards] = useState([
-    '2c',
-    '3h',
-    '5h',
-    '6h',
-    '4s',
-    '8h',
-    '9h',
-    'Th',
-    'Kh',
-    '6d',
-  ]);
-
+function Hand(props) {
   const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     display: 'flex',
@@ -48,9 +35,13 @@ function Hand() {
       return;
     }
 
-    const items = reorder(cards, result.source.index, result.destination.index);
+    const items = reorder(
+      props.cards,
+      result.source.index,
+      result.destination.index,
+    );
 
-    setCards(items);
+    props.setPlayerHand(items);
   };
 
   return (
@@ -63,7 +54,7 @@ function Hand() {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {cards.map((card, index) => (
+              {props.cards.map((card, index) => (
                 <Draggable key={card} draggableId={card} index={index}>
                   {(provided, snapshot) => (
                     <div
