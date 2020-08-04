@@ -1,0 +1,18 @@
+$stack-margin: -25px;
+
+.CardStack {
+  .card {
+    height: 90px;
+    margin-left: $stack-margin;
+    margin-right: $stack-margin;
+  }
+
+  .indicator {
+    height: 20px;
+    width: 20px;
+  }
+
+  .playerName {
+    margin-bottom: 3px;
+  }
+}
