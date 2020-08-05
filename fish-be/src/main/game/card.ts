@@ -1,20 +1,20 @@
-import { ICard, ISuit, IValue } from '../types/game/card';
+import { ICard } from '../types/game/card';
 
 // this file should handle card logic (and should be placed in the appropriate folder)
-export class Card implements ICard {
-  private _suit: ISuit;
-  private _value: IValue;
+class Card implements ICard {
+  private _suit: Suit;
+  private _value: Value;
 
-  constructor(suit: ISuit, value: IValue) {
+  constructor(suit: Suit, value: Value) {
     this._suit = suit;
     this._value = value;
   }
 
-  get suit(): ISuit {
+  get suit(): Suit {
     return this._suit;
   }
 
-  get value(): IValue {
+  get value(): Value {
     return this._value;
   }
 
@@ -22,3 +22,29 @@ export class Card implements ICard {
     return true;
   }
 }
+
+// TODO: Suit and Value enums should not be declared here and pulled by both this class and this class' interface
+enum Suit {
+  Club,
+  Diamond,
+  Heart,
+  Spade,
+}
+
+// Card values. Seven is exempt because it does not exist in this game
+enum Value {
+  Ace,
+  Two,
+  Three,
+  Four,
+  Five,
+  Six,
+  Eight,
+  Nine,
+  Ten,
+  Jack,
+  Queen,
+  King,
+}
+
+export { Card, Suit, Value };
