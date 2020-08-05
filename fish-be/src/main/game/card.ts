@@ -18,7 +18,9 @@ export class Card implements ICard {
     return this._value;
   }
 
-  equals(): boolean {
-    return true;
+  equals(card1: Card, card2: Card): boolean {
+    var suits = card1.suit == card2.suit;
+    var values = card1.value == card2.value;
+    return suits && values;
   }
 }
