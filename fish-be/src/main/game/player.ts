@@ -1,8 +1,9 @@
 import { Card } from './card';
+import { IPlayer } from '../types/game/player';
 import { PlayerName } from '../types/player-name';
 
 // this file should handle player logic (and should be placed in the appropriate folder)
-export class Player {
+export class Player implements IPlayer {
   private _name: PlayerName;
   private _hand: Card[];
 
@@ -28,7 +29,13 @@ export class Player {
 
   // todo: maybe needs some comparison operator
   hasCard(card: Card): boolean {
-    return true;
+    for (const c of this._hand) {
+      if ((Card as any).equals(c, card)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   removeCard(): boolean {

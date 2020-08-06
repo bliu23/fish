@@ -1,5 +1,6 @@
 import * as chai from 'chai';
-import { Card, Suit, Value } from '../../main/game/card';
+import { Suit, Value } from '../../main/game/face';
+import { Card } from '../../main/game/card';
 
 const expect = chai.expect;
 

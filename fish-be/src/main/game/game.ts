@@ -15,6 +15,6 @@ export class Game implements IGame {
   }
 
   playCard(): void {
-    console.log('playing...');
+    this.deck.draw();
   }
 }
