@@ -30,7 +30,7 @@ export class Player implements IPlayer {
   // todo: maybe needs some comparison operator
   hasCard(card: Card): boolean {
     for (const c of this._hand) {
-      if ((Card as any).equals(c, card)) {
+      if (c.matches(card)) {
         return true;
       }
     }

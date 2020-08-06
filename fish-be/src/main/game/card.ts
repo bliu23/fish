@@ -19,12 +19,10 @@ export class Card implements ICard {
     return this._value;
   }
 
-  equals(card1: Card, card2: Card): boolean {
-    const suits = card1._suit === card2._suit;
-    const values = card1._value === card2._value;
+  matches(card: Card): boolean {
+    const suits = this._suit === card._suit;
+    const values = this._value === card._value;
 
     return suits && values;
   }
 }
-
-// TODO: Suit and Value enums should not be declared here and pulled by both this class and this class' interface

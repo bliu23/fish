@@ -38,7 +38,7 @@ export class Deck implements IDeck {
     }
   }
 
-  // Draw top card of the deck
+  // Draw top card of the deck, index 0 is bottom of deck.
   draw(): Card {
     if (this._cards.length === 0) {
       console.log('drawing from empty deck');
