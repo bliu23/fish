@@ -1,7 +1,7 @@
-import { Suit, Value } from '../../game/face';
+import { Suit, Value } from '../../game/card';
+import { Card } from '../../game/card';
 
 export interface ICard {
-  _suit: Suit;
-  _value: Value;
-  matches(card1: ICard, card2: ICard): boolean;
+  matches(card: Card): boolean;
+
 }
