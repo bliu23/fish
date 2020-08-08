@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
+import { socket, subscribeToMove } from '../socket';
 
 function Room() {
   const mainPlayerNumber = 1;
@@ -16,47 +17,33 @@ function Room() {
     5: new Player(['2c', '5h'], 'Player6'),
   });
 
+  useEffect(() => {
+    function updatePlayerState(payload) {
+      setPlayers((prevState) => ({
+        ...prevState,
+        [payload.targetPlayer]: new Player(
+          prevState[payload.targetPlayer].handIfRemoved(payload.card),
+          payload.targetPlayer,
+        ),
+        [payload.guessingPlayer]: new Player(
+          prevState[payload.guessingPlayer].handIfAdded(payload.card),
+          payload.guessingPlayer,
+        ),
+      }));
+    }
+
+    subscribeToMove((err, payload) => {
+      if (err) {
+        return;
+      }
+      updatePlayerState(payload);
+    });
+  }, []);
+
   // Last played (last turn?) can be represented like a player
   const [lastPlayed, setLastPlayed] = useState(
     new Player(['2c'], 'Previous Turn'),
   );
-
-  /**
-   *
-   * @param {string} card
-   * @param {number} guesserPlayerNumber
-   * @param {number} targetPlayerNumber
-   */
-  const updateCards = (card, guesserPlayerNumber, targetPlayerNumber) => {
-    // Remove card
-    updateCard(
-      targetPlayerNumber,
-      players[targetPlayerNumber].handIfRemoved(card),
-    );
-
-    // Add card
-    updateCard(
-      guesserPlayerNumber,
-      players[guesserPlayerNumber].handIfAdded(card),
-    );
-
-    setLastPlayed(new Player([card], 'Previous Turn'));
-  };
-
-  /**
-   * Helper function that updates a single player's hand to the next state
-   * @param {number} playerNumber
-   * @param {string[]} nextCardState
-   */
-  const updateCard = (playerNumber, nextCardState) => {
-    const currentPlayer = players[playerNumber];
-    const nextPlayerState = new Player(nextCardState, currentPlayer.name);
-
-    setPlayers((prevState) => ({
-      ...prevState,
-      [playerNumber]: nextPlayerState,
-    }));
-  };
 
   /**
    * Helper function that re-arranges the main player's hand
@@ -83,7 +70,7 @@ function Room() {
     <div className="Room">
       <button
         onClick={() => {
-          updateCards('3h', 2, 1);
+          // updateCards('3h', 2, 1);
         }}
       ></button>
       <div className="top-bottom-row">
