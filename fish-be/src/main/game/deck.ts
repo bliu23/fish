@@ -47,6 +47,7 @@ export class Deck implements IDeck {
   }
 
   // Draw top card of the deck, index 0 is bottom of deck.
+  // this also draws undefined as Card if deck is empty
   draw(): Card {
     if (this._cards.length === 0) {
       console.log('drawing from empty deck');
@@ -54,5 +55,21 @@ export class Deck implements IDeck {
 
     // dirty way to explicitly cast pop return value
     return (this._cards.pop() as any) as Card;
+  }
+
+  compareDeck(deck: Deck): boolean {
+    if (this.length !== deck.length) {
+      return false;
+    }
+    for (let i = 0; i < this.length; i++) {
+      const card1 = this.draw();
+      const card2 = deck.draw();
+
+      if (!card1.matches(card2)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

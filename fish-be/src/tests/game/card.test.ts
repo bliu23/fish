@@ -13,21 +13,21 @@ describe('Card', () => {
     expect(card1.value).to.equal(value);
   });
 
-  it('should compare card equality', () => {
+  it('should return true if two cards match', () => {
     const card1 = new Card(Suit.Club, Value.Ace);
     const card2 = new Card(Suit.Club, Value.Ace);
-    expect(card1.matches(card2)).to.equal(true);
+    expect(card1.matches(card2)).to.be.true;
   });
 
-  it('should compare card suit inequality', () => {
+  it('return false if card suits do not match', () => {
     const card1 = new Card(Suit.Club, Value.Ace);
     const card2 = new Card(Suit.Spade, Value.Ace);
-    expect(card1.matches(card2)).to.equal(false);
+    expect(card1.matches(card2)).to.be.false;
   });
 
-  it('should compare card value inequality', () => {
+  it('return false if card values do not match', () => {
     const card1 = new Card(Suit.Club, Value.Ace);
     const card2 = new Card(Suit.Club, Value.King);
-    expect(card1.matches(card2)).to.equal(false);
+    expect(card1.matches(card2)).to.be.false;
   });
 });

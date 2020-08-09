@@ -38,7 +38,17 @@ export class Player implements IPlayer {
     return false;
   }
 
-  removeCard(): boolean {
-    return true;
+  removeCard(card: Card): boolean {
+    for (let i = 0; i < this._hand.length; i++) {
+      const c: Card = this._hand[i];
+
+      if (c.matches(card)) {
+        this._hand.splice(i, 1);
+
+        return true;
+      }
+    }
+
+    return false;
   }
 }

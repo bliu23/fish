@@ -5,7 +5,7 @@ import { ICard } from '../types/game/card';
 export class Card implements ICard {
   private _suit: Suit;
   private _value: Value;
-  
+
   constructor(suit: Suit, value: Value) {
     this._suit = suit;
     this._value = value;
@@ -20,8 +20,9 @@ export class Card implements ICard {
   }
 
   matches(card: Card): boolean {
-    const suits = this._suit === card._suit;
-    const values = this._value === card._value;
+    const suits = this.suit === card.suit;
+    const values = this.value === card.value;
+
     return suits && values;
   }
 }
