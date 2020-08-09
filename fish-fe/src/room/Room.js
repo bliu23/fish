@@ -1,53 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
+import Player from '../player/Player';
+import { socket, subscribeToMove } from '../socket';
 
 function Room() {
-  const players = [
-    {
-      hand: ['2c'],
-      name: 'Player1',
-    },
-    {
-      hand: ['2c', '5h', '6h', '5h', '6h', '5h', '6h'],
-      name: 'Player2',
-    },
-    {
-      hand: ['2c', '5h'],
-      name: 'Player3',
-    },
-    {
-      hand: ['2c', '5h', '2c', '5h'],
-      name: 'Player4',
-    },
-    {
-      hand: ['2c', '5h'],
-      name: 'Player5',
-    },
-    {
-      hand: ['2c', '5h'],
-      name: 'Player6',
-    },
-  ];
+  const mainPlayerNumber = 1;
 
-  const [playerHand, setPlayerHand] = useState([
-    '2c',
-    '3h',
-    '5h',
-    '6h',
-    '4s',
-    'As',
-    'Ah',
-  ]);
+  const [players, setPlayers] = useState({
+    0: new Player(['2c'], 'Player1'),
+    1: new Player(['2c', '3h', '5h', '6h', '4s', 'As', 'Ah'], 'Player2'),
+    2: new Player(['2c', '5h'], 'Player3'),
+    3: new Player(['2c', '5h', '2c', '5h'], 'Player4'),
+    4: new Player(['2c', '5h'], 'Player5'),
+    5: new Player(['2c', '5h'], 'Player6'),
+  });
 
-  const lastPlayed = {
-    hand: ['2c'],
-    name: 'Last played',
+  useEffect(() => {
+    function updatePlayerState(payload) {
+      setPlayers((prevState) => ({
+        ...prevState,
+        [payload.targetPlayer]: new Player(
+          prevState[payload.targetPlayer].handIfRemoved(payload.card),
+          payload.targetPlayer,
+        ),
+        [payload.guessingPlayer]: new Player(
+          prevState[payload.guessingPlayer].handIfAdded(payload.card),
+          payload.guessingPlayer,
+        ),
+      }));
+    }
+
+    subscribeToMove((err, payload) => {
+      if (err) {
+        return;
+      }
+      updatePlayerState(payload);
+    });
+  }, []);
+
+  // Last played (last turn?) can be represented like a player
+  const [lastPlayed, setLastPlayed] = useState(
+    new Player(['2c'], 'Previous Turn'),
+  );
+
+  /**
+   * Helper function that re-arranges the main player's hand
+   * @param {string[]} hand
+   */
+  const rearrangePlayerHand = (hand) => {
+    const playerWithRearrangedHand = new Player(hand, mainPlayerNumber);
+    setPlayers((prevState) => ({
+      ...prevState,
+      [mainPlayerNumber]: playerWithRearrangedHand,
+    }));
   };
+
+  /**
+   * These are the actions:
+   * 1. This player is guessing, and it tells the server "I (player X) is going to guess A card from player Y"
+   * 2. Server will respond with:
+   *  1. Whose turn it is
+   *  2. Remove card from who? Technically for other players you only need to know # of cards, but it's ok to keep track of the cards anyways
+   *  3. Add card to who?
+   */
 
   return (
     <div className="Room">
+      <button
+        onClick={() => {
+          // updateCards('3h', 2, 1);
+        }}
+      ></button>
       <div className="top-bottom-row">
         <div className="filler"></div>
         <div className="players">
@@ -61,7 +86,7 @@ function Room() {
       <div className="middle-row">
         <div className="middle-row-left">
           <div className="players">
-            <CardStack player={players[2]} image="right" />
+            <CardStack player={players[2]} front={true} image="right" />
           </div>
         </div>
         <div className="middle-row-center">
@@ -86,7 +111,10 @@ function Room() {
         <div className="filler"></div>
       </div>
       <div id="container">
-        <Hand cards={playerHand} setPlayerHand={setPlayerHand} />
+        <Hand
+          cards={players[mainPlayerNumber].hand}
+          setPlayerHand={rearrangePlayerHand}
+        />
       </div>
     </div>
   );

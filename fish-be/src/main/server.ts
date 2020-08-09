@@ -22,6 +22,13 @@ server.listen(PORT, () => {
 
 // Socket manager
 sio.on('connection', (socket: io.Socket) => {
+  socket.on(
+    'testCommand',
+    (card: string, guessingPlayer: number, targetPlayer: number) => {
+      sio.sockets.emit('move', card, guessingPlayer, targetPlayer);
+    },
+  );
+
   // Sample breaking down by room, probably player as well?
   socket.on('joinRoom', (roomId: RoomId) => {
     if (roomManager.isFull(roomId)) {
@@ -33,6 +40,10 @@ sio.on('connection', (socket: io.Socket) => {
     sio.sockets
       .in(`${roomId}`)
       .emit('connectToRoom', roomManager.getPlayers(roomId).length);
+  });
+
+  socket.on('testThing', () => {
+    sio.sockets.emit('room', 'hello world');
   });
 
   socket.on('disconnect', () => {
