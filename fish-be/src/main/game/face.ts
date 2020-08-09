@@ -1,4 +1,3 @@
-// 4 suits
 export enum Suit {
   Club,
   Diamond,
@@ -6,7 +5,6 @@ export enum Suit {
   Spade,
 }
 
-// 12 face
 export enum Value {
   Ace,
   Two,

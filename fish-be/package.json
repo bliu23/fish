@@ -45,10 +45,12 @@
   "dependencies": {
     "@types/chai": "^4.2.12",
     "@types/express": "^4.17.7",
+    "@types/lodash": "^4.14.159",
     "@types/mocha": "^8.0.1",
     "@types/sinon": "^9.0.4",
     "@types/socket.io": "^2.1.10",
     "express": "^4.17.1",
+    "lodash": "^4.17.19",
     "socket.io": "^2.3.0"
   },
   "nodemonConfigs": {

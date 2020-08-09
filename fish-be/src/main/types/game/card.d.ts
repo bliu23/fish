@@ -1,6 +1,7 @@
 import { Suit, Value } from '../../game/card';
+import { Card } from '../../game/card';
 
 export interface ICard {
-  suit: Suit;
-  value: Value;
+  matches(card: Card): boolean;
+
 }

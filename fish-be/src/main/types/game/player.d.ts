@@ -1,5 +1,7 @@
+import { Card } from '../../game/card';
+
 export interface IPlayer {
-  addCard(): boolean;
-  hasCard(): boolean;
+  addCard(card: Card): boolean;
+  hasCard(card: Card): boolean;
   removeCard(): boolean;
 }
