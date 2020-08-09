@@ -27,7 +27,6 @@ export class Player implements IPlayer {
     return true;
   }
 
-  // todo: maybe needs some comparison operator
   hasCard(card: Card): boolean {
     for (const c of this._hand) {
       if (c.matches(card)) {
@@ -38,17 +37,39 @@ export class Player implements IPlayer {
     return false;
   }
 
-  removeCard(card: Card): boolean {
+  stealCardFrom(player: Player, card: Card): boolean {
+    // ensure player can steal from the halfsuit
+    let halfSuit = false;
+    for (const c of this._hand) {
+      if (c.isSameHalfSuit(card)) {
+        halfSuit = true;
+      }
+    }
+    console.log('halfsuit');
+
+    if (!halfSuit) return false;
+
+    // check if card exist in other player's hand
+    if (player.hasCard(card)) {
+      const card1 = player.removeCard(card);
+      this.addCard(card1);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  // requires card be in player's hand
+  removeCard(card: Card): Card {
     for (let i = 0; i < this._hand.length; i++) {
       const c: Card = this._hand[i];
 
       if (c.matches(card)) {
-        this._hand.splice(i, 1);
-
-        return true;
+        return this._hand.splice(i, 1)[0];
       }
     }
 
-    return false;
+    return card;
   }
 }

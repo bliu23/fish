@@ -59,12 +59,52 @@ describe('Player', () => {
     expect(player.hasCard(card1b)).to.be.true;
     expect(player.hasCard(card2b)).to.be.true;
 
-    player.removeCard(card1a);
+    const card1c = player.removeCard(card1a);
+    expect(card1c.matches(card1b)).to.be.true;
     expect(player.hasCard(card1b)).to.be.false;
     expect(player.hasCard(card2b)).to.be.true;
 
-    player.removeCard(card2a);
+    const card2c = player.removeCard(card2a);
+    expect(card2c.matches(card2b)).to.be.true;
     expect(player.hasCard(card1b)).to.be.false;
     expect(player.hasCard(card2b)).to.be.false;
+  });
+
+  it('should return true if stealCard steals a valid card', () => {
+    // player2 steals a card from player1
+    const player1 = new Player('player1', []);
+    const player2 = new Player('player2', []);
+
+    const card1 = new Card(Suit.Club, Value.Ace);
+    const card2 = lodash.cloneDeep(card1);
+    const card3 = new Card(Suit.Club, Value.Two);
+
+    player1.addCard(card1);
+    player2.addCard(card3);
+
+    expect(player2.hasCard(card2)).to.be.false;
+    expect(player2.stealCardFrom(player1, card2)).to.be.true;
+    expect(player1.hasCard(card2)).to.be.false;
+    expect(player2.hasCard(card2)).to.be.true;
+  });
+
+  it('should test stealCard working properly if the card does not exist in target hand', () => {
+    //
+    const player1 = new Player('player1', []);
+    const player2 = new Player('player2', []);
+
+    const card1 = new Card(Suit.Club, Value.Ace);
+    const card1a = lodash.cloneDeep(card1);
+    const card2 = new Card(Suit.Diamond, Value.Ace);
+    const card2a = lodash.cloneDeep(card2);
+
+    player1.addCard(card1);
+    expect(player2.hasCard(card1a)).to.be.false;
+
+    player2.stealCardFrom(player1, card2);
+    expect(player1.hasCard(card1a)).to.be.true;
+    expect(player2.hasCard(card1a)).to.be.false;
+    expect(player1.hasCard(card2a)).to.be.false;
+    expect(player2.hasCard(card2a)).to.be.false;
   });
 });
