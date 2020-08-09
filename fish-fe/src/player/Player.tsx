@@ -1,12 +1,18 @@
+import { PlayerStatus } from './PlayerStatus';
+
 export default class Player {
   private _hand: string[];
   private _name: string;
-  private _isGuessing: boolean;
+  private _status: PlayerStatus;
 
-  constructor(hand: string[], name: string) {
+  constructor(
+    hand: string[],
+    name: string,
+    status: PlayerStatus = PlayerStatus.NORMAL,
+  ) {
     this._hand = hand;
     this._name = name;
-    this._isGuessing = false;
+    this._status = status;
   }
 
   handIfAdded(card: string): string[] {
@@ -19,6 +25,10 @@ export default class Player {
       return this.hand.slice(0, index).concat(this.hand.slice(index + 1));
     }
     return this.hand;
+  }
+
+  clearedStatus(): Player {
+    return new Player(this.hand, this.name, PlayerStatus.NORMAL);
   }
 
   get name(): string {
@@ -37,11 +47,11 @@ export default class Player {
     this._hand = hand;
   }
 
-  get isGuessing(): boolean {
-    return this._isGuessing;
+  get status(): PlayerStatus {
+    return this._status;
   }
 
-  set isGuessing(isGuessing: boolean) {
-    this._isGuessing = isGuessing;
+  set status(status: PlayerStatus) {
+    this._status = status;
   }
 }

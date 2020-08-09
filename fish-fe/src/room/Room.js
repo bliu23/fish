@@ -3,7 +3,8 @@ import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
-import { socket, subscribeToMove } from '../socket';
+import { subscribeToMove } from '../socket';
+import { PlayerStatus } from '../player/PlayerStatus';
 
 function Room() {
   const mainPlayerNumber = 1;
@@ -11,23 +12,32 @@ function Room() {
   const [players, setPlayers] = useState({
     0: new Player(['2c'], 'Player1'),
     1: new Player(['2c', '3h', '5h', '6h', '4s', 'As', 'Ah'], 'Player2'),
-    2: new Player(['2c', '5h'], 'Player3'),
+    2: new Player(['2c', '5h'], 'Player3', PlayerStatus.GUESSING),
     3: new Player(['2c', '5h', '2c', '5h'], 'Player4'),
     4: new Player(['2c', '5h'], 'Player5'),
     5: new Player(['2c', '5h'], 'Player6'),
+    targetPlayer: 1,
+    guessingPlayer: 0,
   });
 
+  const [guessingPlayer, setGuessingPlayer] = useState(0);
+
   useEffect(() => {
-    function updatePlayerState(payload) {
+    function handleCorrectGuess(payload) {
       setPlayers((prevState) => ({
         ...prevState,
+        [prevState.targetPlayer]: prevState[
+          prevState.targetPlayer
+        ].clearedStatus(),
         [payload.targetPlayer]: new Player(
           prevState[payload.targetPlayer].handIfRemoved(payload.card),
           payload.targetPlayer,
+          PlayerStatus.TARGET_RIGHT,
         ),
         [payload.guessingPlayer]: new Player(
           prevState[payload.guessingPlayer].handIfAdded(payload.card),
           payload.guessingPlayer,
+          PlayerStatus.GUESSING,
         ),
       }));
     }
@@ -36,7 +46,9 @@ function Room() {
       if (err) {
         return;
       }
-      updatePlayerState(payload);
+      handleCorrectGuess(payload);
+      console.log(payload.card);
+      setLastPlayed(new Player([payload.card], 'Previous Turn'));
     });
   }, []);
 
