@@ -56,4 +56,3 @@ export class Deck implements IDeck {
     return (this._cards.pop() as any) as Card;
   }
 }
->>>>>>> Stashed changes
