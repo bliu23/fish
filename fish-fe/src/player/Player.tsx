@@ -1,12 +1,26 @@
+import { PlayerStatus } from './PlayerStatus';
+
 export default class Player {
   private _hand: string[];
   private _name: string;
-  private _isGuessing: boolean;
+  private _status: PlayerStatus;
 
-  constructor(hand: string[], name: string) {
+  constructor(
+    hand: string[],
+    name: string,
+    status: PlayerStatus = PlayerStatus.NORMAL,
+  ) {
     this._hand = hand;
     this._name = name;
-    this._isGuessing = false;
+    this._status = status;
+  }
+
+  static copyWithCardRemoved(player: Player, card: string): Player {
+    return new Player(player.handIfRemoved(card), player.name, player.status);
+  }
+
+  static copyWithCardAdded(player: Player, card: string): Player {
+    return new Player(player.handIfAdded(card), player.name, player.status);
   }
 
   handIfAdded(card: string): string[] {
@@ -37,11 +51,11 @@ export default class Player {
     this._hand = hand;
   }
 
-  get isGuessing(): boolean {
-    return this._isGuessing;
+  get status(): PlayerStatus {
+    return this._status;
   }
 
-  set isGuessing(isGuessing: boolean) {
-    this._isGuessing = isGuessing;
+  set status(status: PlayerStatus) {
+    this._status = status;
   }
 }

@@ -29,6 +29,13 @@ sio.on('connection', (socket: io.Socket) => {
     },
   );
 
+  socket.on(
+    'testIncorrect',
+    (card: string, guessingPlayer: number, targetPlayer: number) => {
+      sio.sockets.emit('incorrect', card, guessingPlayer, targetPlayer);
+    },
+  );
+
   // Sample breaking down by room, probably player as well?
   socket.on('joinRoom', (roomId: RoomId) => {
     if (roomManager.isFull(roomId)) {

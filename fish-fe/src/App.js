@@ -1,4 +1,4 @@
-import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import Room from './room/Room';
 import './App.scss';

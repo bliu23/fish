@@ -7,17 +7,19 @@ import no from '../assets/no.jpg';
 import yes from '../assets/yes.png';
 
 import './CardStack.scss';
+import { PlayerStatus } from '../player/PlayerStatus';
 
 function CardStack(props) {
   const images = {
-    guesser: crown,
-    wrong: no,
-    right: yes,
+    [PlayerStatus.GUESSING]: crown,
+    [PlayerStatus.TARGET_WRONG]: no,
+    [PlayerStatus.TARGET_RIGHT]: yes,
+    [PlayerStatus.NORMAL]: undefined,
   };
 
   return (
     <div className="CardStack players">
-      <img src={images[props.image]} className="indicator"></img>
+      <img src={images[props.player.status]} className="indicator" alt=""></img>
 
       <div className="playerName">{props.player.name}</div>
       {props.player.hand.map((card) => (

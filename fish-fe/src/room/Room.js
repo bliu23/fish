@@ -3,7 +3,11 @@ import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
-import { socket, subscribeToMove } from '../socket';
+import {
+  subscribeToCorrectGuess,
+  subscribeToIncorrectGuess,
+  subscribeToSet,
+} from '../socket';
 
 function Room() {
   const mainPlayerNumber = 1;
@@ -15,34 +19,77 @@ function Room() {
     3: new Player(['2c', '5h', '2c', '5h'], 'Player4'),
     4: new Player(['2c', '5h'], 'Player5'),
     5: new Player(['2c', '5h'], 'Player6'),
+    guessingPlayer: 0,
+  });
+
+  const [guessingPlayer, setGuessingPlayer] = useState(0);
+
+  const [teamScore, setTeamScore] = useState({
+    0: 0,
+    1: 0,
   });
 
   useEffect(() => {
-    function updatePlayerState(payload) {
+    subscribeToSet((err, payload) => {
+      if (err) {
+        return;
+      }
+
+      const team = payload.team;
+      const incrementer = payload.isCorrectGuess ? 1 : -1;
+
+      setTeamScore((prevState) => ({
+        ...prevState,
+        [team]: prevState[team] + incrementer,
+      }));
+    });
+  }, []);
+
+  // Use effect for incorrect guess
+  useEffect(() => {
+    subscribeToIncorrectGuess((err, payload) => {
+      if (err) {
+        return;
+      }
+
+      setGuessingPlayer(payload.guessingPlayer);
+    });
+  }, []);
+
+  // Use effect for correct guess
+  useEffect(() => {
+    function handleCorrectGuess(payload) {
       setPlayers((prevState) => ({
         ...prevState,
-        [payload.targetPlayer]: new Player(
-          prevState[payload.targetPlayer].handIfRemoved(payload.card),
-          payload.targetPlayer,
+        [payload.targetPlayer]: Player.copyWithCardRemoved(
+          prevState[payload.targetPlayer],
+          payload.card,
         ),
-        [payload.guessingPlayer]: new Player(
-          prevState[payload.guessingPlayer].handIfAdded(payload.card),
-          payload.guessingPlayer,
+        [payload.guessingPlayer]: Player.copyWithCardAdded(
+          prevState[payload.guessingPlayer],
+          payload.card,
         ),
       }));
     }
 
-    subscribeToMove((err, payload) => {
+    subscribeToCorrectGuess((err, payload) => {
       if (err) {
         return;
       }
-      updatePlayerState(payload);
+      handleCorrectGuess(payload);
+      setLastPlayed(
+        new Player(
+          [payload.card],
+          `${payload.guessingPlayer} took a ${payload.card} from ${payload.targetPlayer}`,
+        ),
+      );
+      setGuessingPlayer(payload.guessingPlayer);
     });
   }, []);
 
   // Last played (last turn?) can be represented like a player
   const [lastPlayed, setLastPlayed] = useState(
-    new Player(['2c'], 'Previous Turn'),
+    new Player(['7c'], 'Game Start'),
   );
 
   /**
@@ -73,6 +120,10 @@ function Room() {
           // updateCards('3h', 2, 1);
         }}
       ></button>
+      <p>GuessingPlayer: {guessingPlayer}</p>
+      <p>
+        Team 0 Score: {teamScore[0]} | Team 1 Score: {teamScore[1]}
+      </p>
       <div className="top-bottom-row">
         <div className="filler"></div>
         <div className="players">
