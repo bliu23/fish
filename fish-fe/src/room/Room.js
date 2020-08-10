@@ -4,7 +4,6 @@ import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
 import { subscribeToCorrectGuess, subscribeToIncorrectGuess } from '../socket';
-import { PlayerStatus } from '../player/PlayerStatus';
 
 function Room() {
   const mainPlayerNumber = 1;
@@ -37,13 +36,13 @@ function Room() {
     function handleCorrectGuess(payload) {
       setPlayers((prevState) => ({
         ...prevState,
-        [payload.targetPlayer]: new Player(
-          prevState[payload.targetPlayer].handIfRemoved(payload.card),
-          prevState[payload.targetPlayer].name,
+        [payload.targetPlayer]: Player.copyWithCardRemoved(
+          prevState[payload.targetPlayer],
+          payload.card,
         ),
-        [payload.guessingPlayer]: new Player(
-          prevState[payload.guessingPlayer].handIfAdded(payload.card),
-          prevState[payload.guessingPlayer].name,
+        [payload.guessingPlayer]: Player.copyWithCardAdded(
+          prevState[payload.guessingPlayer],
+          payload.card,
         ),
       }));
     }

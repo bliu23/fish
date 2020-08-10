@@ -15,6 +15,14 @@ export default class Player {
     this._status = status;
   }
 
+  static copyWithCardRemoved(player: Player, card: string): Player {
+    return new Player(player.handIfRemoved(card), player.name, player.status);
+  }
+
+  static copyWithCardAdded(player: Player, card: string): Player {
+    return new Player(player.handIfAdded(card), player.name, player.status);
+  }
+
   handIfAdded(card: string): string[] {
     return this.hand.concat(card);
   }
