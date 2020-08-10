@@ -3,7 +3,7 @@ import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
-import { subscribeToMove } from '../socket';
+import { subscribeToCorrectGuess, subscribeToIncorrectGuess } from '../socket';
 import { PlayerStatus } from '../player/PlayerStatus';
 
 function Room() {
@@ -12,43 +12,50 @@ function Room() {
   const [players, setPlayers] = useState({
     0: new Player(['2c'], 'Player1'),
     1: new Player(['2c', '3h', '5h', '6h', '4s', 'As', 'Ah'], 'Player2'),
-    2: new Player(['2c', '5h'], 'Player3', PlayerStatus.GUESSING),
+    2: new Player(['2c', '5h'], 'Player3'),
     3: new Player(['2c', '5h', '2c', '5h'], 'Player4'),
     4: new Player(['2c', '5h'], 'Player5'),
     5: new Player(['2c', '5h'], 'Player6'),
-    targetPlayer: 1,
     guessingPlayer: 0,
   });
 
   const [guessingPlayer, setGuessingPlayer] = useState(0);
 
+  // Use effect for incorrect guess
+  useEffect(() => {
+    subscribeToIncorrectGuess((err, payload) => {
+      if (err) {
+        return;
+      }
+
+      setGuessingPlayer(payload.guessingPlayer);
+    });
+  }, []);
+
+  // Use effect for correct guess
   useEffect(() => {
     function handleCorrectGuess(payload) {
       setPlayers((prevState) => ({
         ...prevState,
-        [prevState.targetPlayer]: prevState[
-          prevState.targetPlayer
-        ].clearedStatus(),
         [payload.targetPlayer]: new Player(
           prevState[payload.targetPlayer].handIfRemoved(payload.card),
-          payload.targetPlayer,
-          PlayerStatus.TARGET_RIGHT,
+          prevState[payload.targetPlayer].name,
         ),
         [payload.guessingPlayer]: new Player(
           prevState[payload.guessingPlayer].handIfAdded(payload.card),
-          payload.guessingPlayer,
-          PlayerStatus.GUESSING,
+          prevState[payload.guessingPlayer].name,
         ),
       }));
     }
 
-    subscribeToMove((err, payload) => {
+    subscribeToCorrectGuess((err, payload) => {
       if (err) {
         return;
       }
       handleCorrectGuess(payload);
       console.log(payload.card);
       setLastPlayed(new Player([payload.card], 'Previous Turn'));
+      setGuessingPlayer(payload.guessingPlayer);
     });
   }, []);
 
@@ -85,6 +92,7 @@ function Room() {
           // updateCards('3h', 2, 1);
         }}
       ></button>
+      <p>{guessingPlayer}</p>
       <div className="top-bottom-row">
         <div className="filler"></div>
         <div className="players">

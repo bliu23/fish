@@ -5,12 +5,24 @@ export const socket = io(server);
 
 // A player made a successful guess
 // A player made an unsuccessful guess
-export const subscribeToMove = (cb) => {
+export const subscribeToCorrectGuess = (cb) => {
+  subscribeToEvent('move', cb);
+};
+
+export const subscribeToIncorrectGuess = (cb) => {
+  subscribeToEvent('incorrect', cb);
+};
+
+export const subscribeToNewGame = (cb) => {
+  subscribeToEvent('newGame', cb);
+};
+
+const subscribeToEvent = (event, cb) => {
   if (!socket) {
     return true;
   }
 
-  socket.on('move', (payload) => {
+  socket.on(event, (payload) => {
     return cb(null, payload);
   });
 };

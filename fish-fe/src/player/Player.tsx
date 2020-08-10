@@ -31,6 +31,14 @@ export default class Player {
     return new Player(this.hand, this.name, PlayerStatus.NORMAL);
   }
 
+  guessingStatus(card: string): Player {
+    return new Player(
+      card ? this.handIfAdded(card) : this.hand,
+      this.name,
+      PlayerStatus.GUESSING,
+    );
+  }
+
   get name(): string {
     return this._name;
   }
