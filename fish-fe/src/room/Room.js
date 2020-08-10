@@ -3,7 +3,11 @@ import Hand from '../hand/Hand';
 import './Room.scss';
 import CardStack from '../cardStack/CardStack';
 import Player from '../player/Player';
-import { subscribeToCorrectGuess, subscribeToIncorrectGuess } from '../socket';
+import {
+  subscribeToCorrectGuess,
+  subscribeToIncorrectGuess,
+  subscribeToSet,
+} from '../socket';
 
 function Room() {
   const mainPlayerNumber = 1;
@@ -19,6 +23,27 @@ function Room() {
   });
 
   const [guessingPlayer, setGuessingPlayer] = useState(0);
+
+  const [teamScore, setTeamScore] = useState({
+    0: 0,
+    1: 0,
+  });
+
+  useEffect(() => {
+    subscribeToSet((err, payload) => {
+      if (err) {
+        return;
+      }
+
+      const team = payload.team;
+      const incrementer = payload.isCorrectGuess ? 1 : -1;
+
+      setTeamScore((prevState) => ({
+        ...prevState,
+        [team]: prevState[team] + incrementer,
+      }));
+    });
+  }, []);
 
   // Use effect for incorrect guess
   useEffect(() => {
@@ -52,15 +77,19 @@ function Room() {
         return;
       }
       handleCorrectGuess(payload);
-      console.log(payload.card);
-      setLastPlayed(new Player([payload.card], 'Previous Turn'));
+      setLastPlayed(
+        new Player(
+          [payload.card],
+          `${payload.guessingPlayer} took a ${payload.card} from ${payload.targetPlayer}`,
+        ),
+      );
       setGuessingPlayer(payload.guessingPlayer);
     });
   }, []);
 
   // Last played (last turn?) can be represented like a player
   const [lastPlayed, setLastPlayed] = useState(
-    new Player(['2c'], 'Previous Turn'),
+    new Player(['7c'], 'Game Start'),
   );
 
   /**
@@ -91,7 +120,10 @@ function Room() {
           // updateCards('3h', 2, 1);
         }}
       ></button>
-      <p>{guessingPlayer}</p>
+      <p>GuessingPlayer: {guessingPlayer}</p>
+      <p>
+        Team 0 Score: {teamScore[0]} | Team 1 Score: {teamScore[1]}
+      </p>
       <div className="top-bottom-row">
         <div className="filler"></div>
         <div className="players">

@@ -17,6 +17,10 @@ export const subscribeToNewGame = (cb) => {
   subscribeToEvent('newGame', cb);
 };
 
+export const subscribeToSet = (cb) => {
+  subscribeToEvent('set', cb);
+};
+
 const subscribeToEvent = (event, cb) => {
   if (!socket) {
     return true;
