@@ -19,3 +19,14 @@ export enum Value {
   Queen,
   King,
 }
+
+export enum HalfSuit {
+  UpperClub,
+  LowerClub,
+  UpperDiamond,
+  LowerDiamond,
+  UpperHeart,
+  LowerHeart,
+  UpperSpade,
+  LowerSpade,
+}

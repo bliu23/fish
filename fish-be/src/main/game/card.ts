@@ -25,4 +25,13 @@ export class Card implements ICard {
 
     return suits && values;
   }
+
+  isSameHalfSuit(card: Card): boolean {
+    const suits = this.suit === card.suit;
+    const thisHalf = Math.floor(this.value / 6);
+    const cardHalf = Math.floor(card.value / 6);
+    const values = thisHalf === cardHalf;
+
+    return suits && values;
+  }
 }

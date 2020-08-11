@@ -18,13 +18,4 @@ export class Game implements IGame {
   playCard(): void {
     this.deck.draw();
   }
-
-  playGame(): void {
-    const numPlayers = this.players.length;
-    let robber = 0;
-    while (true) {
-      robber = robber % numPlayers;
-      robber++;
-    }
-  }
 }
